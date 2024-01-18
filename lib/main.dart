@@ -26,7 +26,7 @@ class BMusic extends StatelessWidget {
         ],
         child: MaterialApp(
           debugShowCheckedModeBanner: true,
-          initialRoute: "/home",
+          initialRoute: "/",
           routes: {
             "/": (_) => const Splash(),
             "/music": (_) =>  const Music(),

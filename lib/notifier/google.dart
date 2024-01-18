@@ -1,11 +1,10 @@
-import 'dart:developer';
-
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:http/http.dart' as http;
 import 'package:http/io_client.dart';
 import 'package:googleapis/drive/v3.dart' as ga;
+import 'package:logger/logger.dart';
 
 class GoogleHttpClient extends IOClient {
   final Map<String, String> _headers;
@@ -24,10 +23,8 @@ class GoogleHttpClient extends IOClient {
 }
 
 class GoogleNotifier extends ChangeNotifier{
-  final GoogleSignIn __googleSignIn = GoogleSignIn(scopes: [
-    'email',
-    'https://www.googleapis.com/auth/drive.file',
-  ]);
+  final Logger __logger = Logger();
+  final GoogleSignIn __googleSignIn = GoogleSignIn(scopes: ['https://www.googleapis.com/auth/drive.file']);
   GoogleSignInAccount? __googleSignInAccount;
   GoogleSignInAccount? get googleSignInAccount => __googleSignInAccount;
 
@@ -40,8 +37,7 @@ class GoogleNotifier extends ChangeNotifier{
   List<ga.File> __files = [];
   List<ga.File> get files => __files;
 
-  GoogleNotifier(){
-    __googleSignIn.onCurrentUserChanged.listen((GoogleSignInAccount? account) async {
+  listen(GoogleSignInAccount? account) async {
       // #docregion CanAccessScopes
         // In mobile, being authenticated means being authorized...
         __isAuthorized = account != null;
@@ -50,30 +46,33 @@ class GoogleNotifier extends ChangeNotifier{
         __googleSignInAccount = account;
         __isLoading = __isAuthorized;
 
+        __logger.e("atleast i go here");
+
         notifyListeners();
         if(__isAuthorized){
           await __listGoogleDriveFiles();
         }
-    });
   }
 
   void signIn() => __googleSignIn.signIn().onError((error, stackTrace) {
-      log("${error.toString()}-$stackTrace");
-  });
+      __logger.e("${error.toString()}-$stackTrace");
+      return null;
+  }).then(listen);
 
   void signOut() => __googleSignIn.signOut().onError((error, stackTrace) {
-      log("${error.toString()}-$stackTrace");
-  });
+      __logger.e("${error.toString()}-$stackTrace");
+      return null;
+  }).then(listen);
 
 
   Future<void> __listGoogleDriveFiles() async {
     var client = GoogleHttpClient(await __googleSignInAccount!.authHeaders);
     var drive = ga.DriveApi(client);
     
-    drive.files.list(spaces: 'appDataFolder').then((value) {
+    drive.files.list().then((value) {
         __files = value.files ?? [];
     }).catchError((error){
-      log(error);
+      __logger.e(error);
     }).whenComplete((){
       __isLoading = false;
       notifyListeners();

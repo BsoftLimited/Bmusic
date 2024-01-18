@@ -29,9 +29,7 @@ class __SearchState extends State<Search>{
             extendBody: true,
             appBar: AppBar(backgroundColor: themeNotifier.current.secondary, elevation: 0,
                 title: Row(mainAxisSize: MainAxisSize.max, children: [
-                  Text('Search', style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold, color: themeNotifier.current.primary)), 
-                  SizedBox(width: 200, child: SearchInput( controller: searchController)) ]),
-                leading: Icon(Icons.search_outlined, color: themeNotifier.current.primary, size: 24,)),
+                  Expanded(child: SearchInput( controller: searchController)) ])),
             body: ListView.builder(itemCount: notifier.results.length,
                 itemBuilder:(context, index) =>  SongView(songModel: notifier.results[index],)),
           );
