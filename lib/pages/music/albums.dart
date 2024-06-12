@@ -1,7 +1,6 @@
 import 'package:bmusic/pages/loading.dart';
 import 'package:bmusic/notifier/albums.dart';
 import 'package:bmusic/notifier/playing.dart';
-import 'package:bmusic/notifier/theme.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
@@ -24,7 +23,7 @@ class _AlbumsState extends State<Albums> {
         create: (BuildContext context) => AlbumsNotifier(songNotifier: playingStateNotifier),
         builder: (context, widget){
           AlbumsNotifier albumsNotifier = context.watch<AlbumsNotifier>();
-          CustomTheme theme = context.watch<ThemeNotifier>().current;
+          final ColorScheme theme = Theme.of(context).colorScheme;
 
           if(albumsNotifier.albums.isEmpty && playingStateNotifier.songs.isNotEmpty){
               return const Loading(message: "sorting songs according to Albums",);
@@ -35,9 +34,9 @@ class _AlbumsState extends State<Albums> {
                     children: List.generate(albumsNotifier.albums.length,(index){
                         return Column(crossAxisAlignment: CrossAxisAlignment.center, mainAxisSize: MainAxisSize.min,
                               children: [
-                                  Icon(Icons.album, size: 140, color: theme.primaryDark),
-                                  Text(albumsNotifier.albumsTitles[index], maxLines: 1, style: TextStyle(color: theme.primaryDark, fontSize: 14, fontWeight: FontWeight.w500),),
-                                  Text("${albumsNotifier.songs(albumsNotifier.albumsTitles[index]).length} songs", maxLines: 1, style: TextStyle(color: theme.dark, fontSize: 12),),
+                                  Icon(Icons.album, size: 140, color: theme.primaryFixedDim),
+                                  Text(albumsNotifier.albumsTitles[index], maxLines: 1, style: TextStyle(color: theme.primaryFixedDim, fontSize: 14, fontWeight: FontWeight.w500),),
+                                  Text("${albumsNotifier.songs(albumsNotifier.albumsTitles[index]).length} songs", maxLines: 1, style: TextStyle(color: theme.onSurfaceVariant, fontSize: 12),),
                               ],
                             );                 
                     }),

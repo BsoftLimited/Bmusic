@@ -1,31 +1,25 @@
 import 'package:bmusic/notifier/playing.dart';
+import 'package:bmusic/utils/util.dart';
 import 'package:flutter/material.dart';
-import 'package:on_audio_query/on_audio_query.dart';
 
 class GenreNotifier extends ChangeNotifier{
-    Map<String, List<SongModel>> __genre ={};
-    Map<String, List<SongModel>> get genre =>__genre;
+    Map<String, List<Category>> __genre ={};
+    Map<String, List<Category>> get genre =>__genre;
     List<String> get genreNames  => __genre.keys.toList();
-    List songs(String folder) => __genre[folder]!;
 
-    final PlayingStateNotifier __songNotifier;
+    List<Category> songs(String folder) => __genre[folder]!;
 
-    GenreNotifier({required PlayingStateNotifier songNotifier}): __songNotifier = songNotifier{
-      init();
-    }
-
-    Future<void> init() async{
-        __genre=  await Future<Map<String, List<SongModel>>>((){
-            Map<String, List<SongModel>> init ={};
-            for (var model in __songNotifier.songs) {
-              if(init.containsKey(model.genre)){
-                init[model.genre ?? "unknown"]?.add(model);
-              }else{
-                init[model.genre ?? "unknown"] = [model];
-              }
+    GenreNotifier({required PlayingStateNotifier songNotifier}){
+        Future<Map<String, List<Category>>>((){
+            Map<String, List<Category>> init ={};
+            for (final model in songNotifier.songs.indexed) {
+                if(init.containsKey(model.$2.artist)){
+                    init[model.$2.genre ?? "unknown"]?.add(Category(index: model.$1, songModel: model.$2));
+                }else{
+                    init[model.$2.genre ?? "unknown"] = [Category(index: model.$1, songModel: model.$2)];
+                }
             }
             return init;
-        });
-        notifyListeners();
+        }).then((genres)=> __genre = genres).whenComplete(()=> notifyListeners());
     }
 }

@@ -1,5 +1,4 @@
 import 'package:bmusic/notifier/playing.dart';
-import 'package:bmusic/notifier/theme.dart';
 import 'package:flutter/material.dart';
 import 'package:mini_music_visualizer/mini_music_visualizer.dart';
 import 'package:on_audio_query/on_audio_query.dart';
@@ -16,15 +15,15 @@ class SongView extends StatefulWidget{
 
 class __SongVeiwState extends State<SongView>{
     late PlayingStateNotifier playingStateNotifier;
-    late CustomTheme theme;
+    late ColorScheme theme;
 
     List<Widget> initDetails(){
         List<Widget> init = [
-            Text(widget.songModel.title, maxLines: 1, textAlign: TextAlign.start, style: TextStyle(fontSize: 13, fontWeight: FontWeight.w600, letterSpacing: 1.2, color: theme.primaryDark,)),
+            Text(widget.songModel.title, maxLines: 1, textAlign: TextAlign.start, style: TextStyle(fontSize: 13, fontWeight: FontWeight.w600, letterSpacing: 1.2, color: theme.primaryFixedDim,)),
             const SizedBox(height: 5,),
-            Text("Artist : ${widget.songModel.artist}", maxLines: 1, textAlign: TextAlign.start, style: TextStyle(fontSize: 12, fontWeight: FontWeight.w600, letterSpacing: 1.2, color: theme.dark),),
+            Text("Artist : ${widget.songModel.artist}", maxLines: 1, textAlign: TextAlign.start, style: TextStyle(fontSize: 12, fontWeight: FontWeight.w600, letterSpacing: 1.2, color: theme.onSurfaceVariant),),
             const SizedBox(height: 2,),
-            Text("Album : ${widget.songModel.album}", maxLines: 1, textAlign: TextAlign.start, style: TextStyle(fontSize: 12, color: theme.dark),) 
+            Text("Album : ${widget.songModel.album}", maxLines: 1, textAlign: TextAlign.start, style: TextStyle(fontSize: 12, color: theme.onSurfaceVariant),) 
         ];
         
         return init;
@@ -46,8 +45,7 @@ class __SongVeiwState extends State<SongView>{
     @override
     Widget build(BuildContext context) {
         playingStateNotifier = context.watch<PlayingStateNotifier>(); 
-        ThemeNotifier themeNotifier = context.watch<ThemeNotifier>();
-        theme = themeNotifier.current;
+        theme = Theme.of(context).colorScheme;
         
         return Column(mainAxisAlignment: MainAxisAlignment.start, children: [
             TextButton( onPressed: (){},

@@ -2,10 +2,8 @@ import 'dart:async';
 
 import 'package:after_layout/after_layout.dart';
 import 'package:bmusic/components/input.dart';
-import 'package:bmusic/notifier/theme.dart';
 import 'package:bmusic/utils/details.dart';
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
 
 class LoginForm extends StatefulWidget {
   const LoginForm({super.key});
@@ -29,13 +27,13 @@ class __LoginFormState extends State<LoginForm> with AfterLayoutMixin {
 
   @override
   Widget build(BuildContext context) {
-    ThemeNotifier themeNotifier = context.watch<ThemeNotifier>();
+    final ColorScheme theme = Theme.of(context).colorScheme;
     
     return Padding(
       padding: const EdgeInsets.only(left: 10.0, right: 10.0, bottom: 10),
       child: Column(crossAxisAlignment: CrossAxisAlignment.start, mainAxisSize: MainAxisSize.min,
           children: [
-            Text("LOGIN", style: TextStyle( fontSize: 16.0, fontWeight: FontWeight.bold, color: themeNotifier.current.primaryDark), textAlign: TextAlign.left),
+            Text("LOGIN", style: TextStyle( fontSize: 16.0, fontWeight: FontWeight.bold, color: theme.primaryFixedDim), textAlign: TextAlign.left),
             const SizedBox(height: 10),
             Input(
                 hint: "Email Address",
@@ -58,7 +56,7 @@ class __LoginFormState extends State<LoginForm> with AfterLayoutMixin {
                   flex: 1,
                   child: MaterialButton(
                       textColor: Colors.white,
-                      color: themeNotifier.current.primaryDark,
+                      color: theme.primaryFixedDim,
                       elevation: 0,
                       shape: const RoundedRectangleBorder(
                           borderRadius: BorderRadius.all(Radius.circular(20))),

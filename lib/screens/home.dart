@@ -4,7 +4,6 @@ import 'package:bmusic/pages/home/online.dart';
 import 'package:bmusic/pages/home/user.dart';
 import 'package:bmusic/pages/home/settings.dart';
 import 'package:bmusic/notifier/google.dart';
-import 'package:bmusic/notifier/theme.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
@@ -26,10 +25,10 @@ class __HomeState extends State<Home> with SingleTickerProviderStateMixin {
   }
 
   BottomBarItem barItem(BuildContext context, IconData icon){
-      CustomTheme theme = context.watch<ThemeNotifier>().current;
+      final ColorScheme theme = Theme.of(context).colorScheme;
 
       return BottomBarItem(
-          inActiveItem: Icon(icon, color: theme.dark),
+          inActiveItem: Icon(icon, color: theme.onSurfaceVariant),
           activeItem: Icon(icon, color: theme.primary),
           itemLabel: '',
       );
@@ -46,15 +45,15 @@ class __HomeState extends State<Home> with SingleTickerProviderStateMixin {
 
   @override
   Widget build(BuildContext context) {
-      ThemeNotifier themeNotifier = context.watch<ThemeNotifier>();
+      final ColorScheme theme = Theme.of(context).colorScheme;
       return MultiProvider(
         providers: [
           ChangeNotifierProvider(create: (context) => GoogleNotifier())
         ],
         child: Scaffold( extendBody: true,
-            appBar: AppBar(backgroundColor: themeNotifier.current.light, elevation: 0,
-                title: Text('Home', style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold, color: themeNotifier.current.primary),),
-                leading: Icon(Icons.home_outlined, color: themeNotifier.current.primary, size: 34,),
+            appBar: AppBar(backgroundColor: theme.surface, elevation: 0,
+                title: Text('Home', style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold, color: theme.primary),),
+                leading: Icon(Icons.home_outlined, color: theme.primary, size: 34,),
                 actions: [ IconButton(icon: const Icon(Icons.queue_music_outlined), onPressed: () {  },) ],
                 leadingWidth: 30,),
             body: PageView( controller: __pageController, physics: const NeverScrollableScrollPhysics(), children: pages),

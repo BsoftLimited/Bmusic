@@ -1,6 +1,4 @@
-import 'package:bmusic/notifier/theme.dart';
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
 
 class SearchInput extends StatefulWidget{
     final TextEditingController controller;
@@ -16,15 +14,15 @@ class SearchInput extends StatefulWidget{
 class SeachInputState extends State<SearchInput>{
     @override
     Widget build(BuildContext context) {
-        ThemeNotifier themeNotifier = context.watch<ThemeNotifier>();
+        final ColorScheme theme = Theme.of(context).colorScheme;
         
-        return DecoratedBox(decoration: BoxDecoration( border: Border.fromBorderSide(BorderSide(color: themeNotifier.current.primary, width: 2.0)), borderRadius: BorderRadius.circular(14)),
+        return DecoratedBox(decoration: BoxDecoration( border: Border.fromBorderSide(BorderSide(color: theme.primary, width: 2.0)), borderRadius: BorderRadius.circular(14)),
             child: Row(mainAxisSize: MainAxisSize.max,  children: [
                 Padding(
                   padding: const EdgeInsets.only(left: 4),
                   child: SizedBox(width: 40, height: 40,
                     child: DecoratedBox(
-                        decoration: BoxDecoration(color: themeNotifier.current.primary, borderRadius: BorderRadius.circular(12)),
+                        decoration: BoxDecoration(color: theme.primary, borderRadius: BorderRadius.circular(12)),
                         child: Center( child: Icon( widget.iconData, color: Colors.white, size: 20)),
                     ),
                   ),

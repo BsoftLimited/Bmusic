@@ -71,21 +71,27 @@ class PlayingStateNotifier extends ChangeNotifier {
 		        if (!permissionStatus) {
 		            audioQuery.permissionsRequest();
 		        }
-		        find(audioQuery);
+		        find(audioQuery).then((songs){
+                __songs.addAll(songs);
+                init();
+            }).whenComplete((){
+                notifyListeners();
+                if(onLoadingfinished != null){
+                    onLoadingfinished!();
+                }
+            });
 		    });
     }
 
-    void find(OnAudioQuery audioQuery){
-        audioQuery.querySongs( sortType: SongSortType.DISPLAY_NAME, orderType: OrderType.ASC_OR_SMALLER, uriType: UriType.EXTERNAL, ignoreCase: true).then((songs){
-            __songs.addAll(songs);
-        }).catchError((error){
+    Future<Iterable<SongModel>> find(OnAudioQuery audioQuery) async{
+        try{
+             List<SongModel> initList = await audioQuery.querySongs( sortType: SongSortType.DISPLAY_NAME, orderType: OrderType.ASC_OR_SMALLER, uriType: UriType.EXTERNAL, ignoreCase: true);
+
+             return initList;
+        }catch(error){
             log('Error: $error');
-        }).whenComplete((){
-            init();
-            if(onLoadingfinished != null){
-              onLoadingfinished!();
-            }
-        });
+            throw Exception(error);
+        }
     }
 
     void init(){

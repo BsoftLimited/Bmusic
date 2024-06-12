@@ -1,31 +1,24 @@
 import 'package:bmusic/notifier/playing.dart';
+import 'package:bmusic/utils/util.dart';
 import 'package:flutter/material.dart';
-import 'package:on_audio_query/on_audio_query.dart';
 
 class ArtistNotifier extends ChangeNotifier{
-    Map<String, List<SongModel>> __artists ={};
-    Map<String, List<SongModel>> get artists =>__artists;
+    Map<String, List<Category>> __artists ={};
+    Map<String, List<Category>> get artists =>__artists;
     List<String> get artistNames  => __artists.keys.toList();
-    List songs(String artist) => __artists[artist]!;
+    List<Category> songs(String artist) => __artists[artist]!;
 
-    final PlayingStateNotifier __songNotifier;
-
-    ArtistNotifier({required PlayingStateNotifier songNotifier}): __songNotifier = songNotifier{
-      init();
-    }
-
-    Future<void> init() async{
-        __artists=  await Future<Map<String, List<SongModel>>>((){
-            Map<String, List<SongModel>> init ={};
-            for (var model in __songNotifier.songs) {
-              if(init.containsKey(model.artist ?? "unknown")){
-                init[model.artist]?.add(model);
-              }else{
-                init[model.artist ?? "unknown"] = [model];
-              }
+    ArtistNotifier({required PlayingStateNotifier songNotifier}){
+        Future<Map<String, List<Category>>>((){
+            Map<String, List<Category>> init ={};
+            for (final model in songNotifier.songs.indexed) {
+                if(init.containsKey(model.$2.artist)){
+                    init[model.$2.artist ?? "unknown"]?.add(Category(index: model.$1, songModel: model.$2));
+                }else{
+                    init[model.$2.artist ?? "unknown"] = [Category(index: model.$1, songModel: model.$2)];
+                }
             }
             return init;
-        });
-        notifyListeners();
+        }).then((artists)=> __artists = artists).whenComplete(()=> notifyListeners());
     }
 }

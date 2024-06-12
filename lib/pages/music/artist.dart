@@ -1,7 +1,6 @@
 import 'package:bmusic/pages/loading.dart';
 import 'package:bmusic/notifier/artists.dart';
 import 'package:bmusic/notifier/playing.dart';
-import 'package:bmusic/notifier/theme.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
@@ -26,7 +25,7 @@ class _ArtistsState extends State<Artists> {
           ArtistNotifier artistNotifier  = context.watch<ArtistNotifier>();
           List<String> artists = artistNotifier.artistNames;
 
-          CustomTheme theme = context.watch<ThemeNotifier>().current;
+          final ColorScheme theme = Theme.of(context).colorScheme;
 
           if(artistNotifier.artistNames.isEmpty && playingStateNotifier.songs.isNotEmpty){
               return const Loading(message: "sorting songs according to Artists",);
@@ -39,8 +38,8 @@ class _ArtistsState extends State<Artists> {
                           return Column(crossAxisAlignment: CrossAxisAlignment.center, mainAxisSize: MainAxisSize.max,
                             children: [
                                 const CircleAvatar( radius: 70, backgroundColor: Colors.white70, backgroundImage: AssetImage("files/artist.png"),),
-                                Text(artists[index], maxLines: 1, style: TextStyle(color: theme.primaryDark, fontSize: 13, fontWeight: FontWeight.w500),),
-                                Text("${artistNotifier.songs(artists[index]).length} songs", maxLines: 1, style: TextStyle(color: theme.dark, fontSize: 12),),
+                                Text(artists[index], maxLines: 1, style: TextStyle(color: theme.primaryFixedDim, fontSize: 13, fontWeight: FontWeight.w500),),
+                                Text("${artistNotifier.songs(artists[index]).length} songs", maxLines: 1, style: TextStyle(color: theme.onSurfaceVariant, fontSize: 12),),
                             ],
                           );
                       }),
