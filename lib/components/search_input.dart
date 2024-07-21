@@ -5,7 +5,7 @@ class SearchInput extends StatefulWidget{
     final IconData iconData;
     final String hint;
 
-    const SearchInput({super.key, required this.controller, this.iconData = Icons.search_outlined, this.hint = "search"});
+    const SearchInput({super.key, required this.controller, this.iconData = Icons.search_outlined, this.hint = "search songs"});
 
     @override
     State<StatefulWidget> createState() => SeachInputState();

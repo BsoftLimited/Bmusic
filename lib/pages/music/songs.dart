@@ -1,4 +1,5 @@
 import 'dart:developer';
+import 'dart:ui';
 
 import 'package:bmusic/components/song_model.dart';
 import 'package:bmusic/notifier/playing.dart';
@@ -18,9 +19,8 @@ class __SongsState extends State<Songs>{
     Widget build(BuildContext context) {
         PlayingStateNotifier playingStateNotifier = context.watch<PlayingStateNotifier>();
 
-        log('songs gotten: ${playingStateNotifier.songs.length}');
-        return SafeArea(
-                child: ListView.builder(itemCount: playingStateNotifier.songs.length,
-                itemBuilder:(context, index) =>  SongView(songModel: playingStateNotifier.songs[index],)));
+        return ListView.separated(itemCount: playingStateNotifier.songs.length,
+            itemBuilder:(context, index) =>  SongView(songModel: playingStateNotifier.songs[index],),
+            separatorBuilder: (context, index) =>  const Divider());
     }
 }

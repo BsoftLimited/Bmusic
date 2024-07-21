@@ -8,6 +8,9 @@ class ArtistNotifier extends ChangeNotifier{
     List<String> get artistNames  => __artists.keys.toList();
     List<Category> songs(String artist) => __artists[artist]!;
 
+    bool __loading = true;
+    bool get loading => __loading;
+
     ArtistNotifier({required PlayingStateNotifier songNotifier}){
         Future<Map<String, List<Category>>>((){
             Map<String, List<Category>> init ={};
@@ -19,6 +22,9 @@ class ArtistNotifier extends ChangeNotifier{
                 }
             }
             return init;
-        }).then((artists)=> __artists = artists).whenComplete(()=> notifyListeners());
+        }).then((artists)=> __artists = artists).whenComplete((){
+            __loading = false;
+            notifyListeners();
+        });
     }
 }

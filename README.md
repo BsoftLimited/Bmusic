@@ -17,7 +17,7 @@ Development is still in it's infancy, so there is a lot of stuff still to be don
 - [x] Query device for Music Files
 - [x] Sort them according to playlist
 - [x] Search through music and Play List
-- [ ] Play music files from Device:tada:
+- [x] Play music files from Device:tada:
 - [ ] link to Google Play account :tada:
 - [ ] Browse through music files on Google Drive
 - [ ] Download Music from Google Drive :tada:

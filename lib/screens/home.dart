@@ -1,4 +1,7 @@
+import 'dart:ui';
+
 import 'package:animated_notch_bottom_bar/animated_notch_bottom_bar/animated_notch_bottom_bar.dart';
+import 'package:blurrycontainer/blurrycontainer.dart';
 import 'package:bmusic/pages/home/downloads.dart';
 import 'package:bmusic/pages/home/online.dart';
 import 'package:bmusic/pages/home/user.dart';
@@ -41,22 +44,29 @@ class __HomeState extends State<Home> with SingleTickerProviderStateMixin {
       barItem(context, Icons.settings_outlined),
   ];
 
+  void toMusics() =>Navigator.pushNamed(context, "/music");
+
   List<Widget> pages = const [ User(), Online(), Downloads(), Settings() ];
 
   @override
   Widget build(BuildContext context) {
       final ColorScheme theme = Theme.of(context).colorScheme;
+      
       return MultiProvider(
         providers: [
           ChangeNotifierProvider(create: (context) => GoogleNotifier())
         ],
-        child: Scaffold( extendBody: true,
+        child: Scaffold( extendBody: true, backgroundColor: Colors.transparent,
             appBar: AppBar(backgroundColor: theme.surface, elevation: 0,
                 title: Text('Home', style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold, color: theme.primary),),
                 leading: Icon(Icons.home_outlined, color: theme.primary, size: 34,),
-                actions: [ IconButton(icon: const Icon(Icons.queue_music_outlined), onPressed: () {  },) ],
+                actions: [ IconButton(icon: const Icon(Icons.queue_music_outlined), onPressed: toMusics,) ],
                 leadingWidth: 30,),
-            body: PageView( controller: __pageController, physics: const NeverScrollableScrollPhysics(), children: pages),
+            body: BlurryContainer(
+                blur: 10,
+                color: Colors.black.withOpacity(0.3),
+                padding: const EdgeInsets.all(0),
+                child: PageView( controller: __pageController, physics: const NeverScrollableScrollPhysics(), children: pages)),
             bottomNavigationBar: AnimatedNotchBottomBar(color: Colors.white, showLabel: false,
               notchBottomBarController: __controller,
               onTap: (index) => __pageController.jumpToPage(index),

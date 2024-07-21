@@ -9,6 +9,9 @@ class AlbumsNotifier extends ChangeNotifier{
 
     List<Category> songs(String album) => __albums[album]!;
 
+    bool __loading = true;
+    bool get loading => __loading;
+
     AlbumsNotifier({required PlayingStateNotifier songNotifier}){
         Future<Map<String, List<Category>>>((){
             Map<String, List<Category>> init ={};
@@ -20,6 +23,9 @@ class AlbumsNotifier extends ChangeNotifier{
                 }
             }
             return init;
-        }).then((albums)=> __albums = albums).whenComplete(()=> notifyListeners());
+        }).then((albums)=> __albums = albums).whenComplete((){
+            __loading = false;
+            notifyListeners();
+        });
     }
 }

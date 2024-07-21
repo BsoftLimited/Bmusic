@@ -7,6 +7,9 @@ import Flutter
     _ application: UIApplication,
     didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?
   ) -> Bool {
+    window?.backgroundColor = UIColor.clear
+    window?.rootViewController?.view.backgroundColor = UIColor.clear
+    window?.rootViewController?.view.isOpaque = false
     GeneratedPluginRegistrant.register(with: self)
     return super.application(application, didFinishLaunchingWithOptions: launchOptions)
   }

@@ -4,18 +4,25 @@ import 'package:on_audio_query/on_audio_query.dart';
 
 class SearchNotifier extends ChangeNotifier{
   List<SongModel> all;
-  List<Category> results = [];
+  List<Category> __results = [];
+  List<Category> get results => __results;
 
   SearchNotifier({ required this.all });
 
   find(String query){
-    if(query.isNotEmpty){
-      results = all.where((element){ 
-          return element.album!.contains(query) || element.displayName.contains(query) || element.artist!.contains(query) || element.uri!.contains(query); 
-      }).indexed.map((song)=> Category(index: song.$1, songModel: song.$2)).toList();
-    }else{
-      results = [];
-    }
-    notifyListeners();
-  } 
+      Future<List<Category>>((){
+          query = query.toLowerCase();
+          if(query.isNotEmpty){
+            return all.where((element){ 
+                return element.album!.toLowerCase().contains(query) || element.title.toLowerCase().contains(query) || element.artist!.toLowerCase().contains(query); 
+            }).indexed.map((song)=> Category(index: song.$1, songModel: song.$2)).toList();
+          }else{
+            return [];
+          }
+      }).then((results){
+          __results = results;
+          notifyListeners();
+      });
+  }
+  
 }

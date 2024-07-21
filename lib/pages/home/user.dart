@@ -10,6 +10,6 @@ class User extends StatefulWidget{
 class __UserState extends State<User>{
   @override
   Widget build(BuildContext context) {
-    return Container();
+    return Container(color: Colors.transparent,);
   }
 }

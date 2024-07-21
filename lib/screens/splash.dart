@@ -21,7 +21,7 @@ class __SplashState extends State<Splash>{
         PlayingStateNotifier playingNotifier = context.watch<PlayingStateNotifier>();
         playingNotifier.onLoadingfinished = (){
           log("i am done loading");
-          Navigator.pushReplacementNamed(context, "/home");
+          Navigator.pop(context);
         };
         
         return Scaffold(
