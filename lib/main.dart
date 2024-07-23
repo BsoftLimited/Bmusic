@@ -6,7 +6,6 @@ import 'package:bmusic/screens/home.dart';
 import 'package:bmusic/screens/music.dart';
 import 'package:bmusic/screens/search.dart';
 import 'package:bmusic/screens/splash.dart';
-import 'package:bmusic/test.dart';
 import 'package:bmusic/utils/theme.dart';
 import 'package:bmusic/utils/util.dart';
 

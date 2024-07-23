@@ -1,11 +1,9 @@
 import 'dart:async';
 import 'dart:io';
 import 'dart:math';
-import 'dart:typed_data';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:on_audio_query/on_audio_query.dart';
-import 'package:wallpaper_handler/wallpaper_handler.dart';
 
 TextTheme createTextTheme(
     BuildContext context, String bodyFontString, String displayFontString) {

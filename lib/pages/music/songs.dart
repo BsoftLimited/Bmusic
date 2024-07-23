@@ -1,6 +1,3 @@
-import 'dart:developer';
-import 'dart:ui';
-
 import 'package:bmusic/components/song_model.dart';
 import 'package:bmusic/notifier/playing.dart';
 import 'package:flutter/material.dart';
