@@ -1,80 +1,176 @@
-import 'dart:ui';
-
+//import 'package:bubble_navigation_bar/bubble_navigation_bar.dart';
 import 'package:flutter/material.dart';
 
-class BlurContainerDemo extends StatelessWidget {
-  const BlurContainerDemo({super.key});
+class MyApp extends StatelessWidget {
+  const MyApp({super.key});
 
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'BlurryContainer Demo',
-      debugShowCheckedModeBanner: false,
-      home: Scaffold(
-        backgroundColor: Colors.transparent,
-        body: SizedBox.expand(
-          child: Stack(
-            alignment: Alignment.center,
-            children: [
-              const Positioned(
-                top: 200,
-                left: 10,
-                child: GradientBall(colors: [Colors.deepOrange, Colors.amber]),
-              ),
-              const Positioned(
-                top: 400,
-                right: 10,
-                child: GradientBall(
-                  size: Size.square(200),
-                  colors: [Colors.blue, Colors.purple],
-                ),
-              ),
-              Center(
-              child: ClipRRect(
-                borderRadius: BorderRadius.circular(20.0), // Optional: adds rounded corners
-                child: BackdropFilter(
-                  filter: ImageFilter.blur(sigmaX: 10.0, sigmaY: 10.0),
-                  child: Container(
-                    width: 300.0,
-                    height: 400.0,
-                    color: Colors.black.withOpacity(0.5),
-                    child: const Center(
-                      child:  Text(
-                        'Glass Blur Effect',
-                        style: TextStyle(
-                          fontSize: 24.0,
-                          color: Colors.white,
-                        ),
-                      ),
-                    ),
-                  )
-          ),
-        ),
-      ), ])
-    )));
+      title: 'Flutter AppBar Hide on Scroll',
+      theme: ThemeData(
+        primarySwatch: Colors.blue,
+      ),
+      home: HomePage(),
+    );
   }
 }
 
-class GradientBall extends StatelessWidget {
-  final List<Color> colors;
-  final Size size;
-  const GradientBall({
-    super.key,
-    required this.colors,
-    this.size = const Size.square(150),
-  });
+class HomePage extends StatefulWidget {
+    @override
+    State<StatefulWidget> createState() => __HomePageState();
+}
+
+class __HomePageState extends State<HomePage> {
+  Image? backgoround;
+
+  @override
+  void initState() {
+      super.initState();
+  }
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      height: size.height,
-      width: size.width,
-      decoration: BoxDecoration(
-        shape: BoxShape.circle,
-        gradient: LinearGradient(
-          colors: colors,
-        ),
+    
+    return Scaffold(
+      body: CustomScrollView(
+        slivers: <Widget>[
+          SliverAppBar(
+            title: const Text('AppBar'),
+            floating: true,
+            pinned: true,
+            snap: true,
+            flexibleSpace: FlexibleSpaceBar(
+              background: backgoround,
+            ),
+            expandedHeight: 200,
+          ),
+          SliverList(
+            delegate: SliverChildBuilderDelegate(
+              (context, index) => ListTile(
+                title: Text('Item #$index'),
+              ),
+              childCount: 50,
+            ),
+          ),
+        ],
       ),
     );
   }
 }
+
+/*class MyApp extends StatelessWidget {
+  const MyApp({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return MaterialApp(
+      title: 'Flutter Demo',
+      theme: ThemeData(
+        colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
+        useMaterial3: true,
+      ),
+      home: const MyHomePage(),
+    );
+  }
+}
+
+class MyHomePage extends StatefulWidget {
+  const MyHomePage({super.key});
+
+  @override
+  State<MyHomePage> createState() => _MyHomePageState();
+}
+
+class _MyHomePageState extends State<MyHomePage> {
+  final _pageController = PageController();
+  int _index = 0;
+
+  @override
+  void initState() {
+    super.initState();
+    _pageController.addListener(() {
+      setState(() {
+        _index = _pageController.page!.round();
+      });
+    });
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(
+        backgroundColor: Theme.of(context).colorScheme.inversePrimary,
+        title: const Text('Bubble Navigation Bar'),
+      ),
+      body: PageView(
+        controller: _pageController,
+        children: const [
+          Center(
+            child: Text(
+              'Home',
+            ),
+          ),
+          Center(
+            child: Text(
+              'Colors',
+            ),
+          ),
+          Center(
+            child: Text(
+              'Favorite',
+            ),
+          ),
+          Center(
+            child: Text(
+              'Profile',
+            ),
+          ),
+          Center(
+            child: Text(
+              'Settings',
+            ),
+          ),
+        ],
+      ),
+      bottomNavigationBar: BubbleNavigationBar(
+        currentIndex: _index,
+        // iconSize: 32,
+        // padding: const EdgeInsets.symmetric(horizontal: 0),
+        backgroundColor: Colors.black,
+        selectedItemColor: Colors.orange,
+        unselectedItemColor: Colors.orange.shade200,
+        // showSelectedLevel: false,
+        onIndexChanged: (index) {
+          _pageController.animateToPage(
+            index,
+            duration: const Duration(milliseconds: 240),
+            curve: Curves.decelerate,
+          );
+        },
+        items: const [
+          BubbleNavItem(
+            icon: Icon(Icons.home),
+            label: 'Home',
+          ),
+          BubbleNavItem(
+            icon: Icon(Icons.color_lens),
+            label: 'Colors',
+          ),
+          BubbleNavItem(
+            icon: Icon(Icons.star),
+            label: 'Favorite',
+          ),
+          BubbleNavItem(
+            icon: Icon(Icons.person),
+            label: 'Profile',
+          ),
+          BubbleNavItem(
+            icon: Icon(Icons.settings),
+            label: 'Settings',
+          ),
+        ],
+      ),
+    );
+  }
+}*/

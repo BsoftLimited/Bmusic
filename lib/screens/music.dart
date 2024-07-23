@@ -1,3 +1,4 @@
+import 'package:bmusic/components/background.dart';
 import 'package:bmusic/components/bottom_panel.dart';
 import 'package:bmusic/pages/music/albums.dart';
 import 'package:bmusic/pages/music/artist.dart';
@@ -42,14 +43,10 @@ class __MusicState extends State<Music>{
           ),
         ),
         body: SlidingUpPanel(
-            maxHeight: 600, minHeight: 70, backdropEnabled: true,
+            maxHeight: 550, minHeight: 70, backdropEnabled: true,
             controller: panelController,
             borderRadius: const BorderRadius.only(topLeft: Radius.circular(20), topRight: Radius.circular(20)),
-            body: Container(
-                padding: const EdgeInsets.only(bottom: 245),
-                color: Colors.black.withOpacity(0.5),
-                child: const TabBarView( children: [ Songs(), Albums(), Artists(), Playlists() ]),
-              ),
+            body: const Background(child: TabBarView( children: [ Songs(), Albums(), Artists(), Playlists() ])),
               collapsed: const BottomPanel(),
               panel: const Playing(),
             ),

@@ -1,7 +1,5 @@
-import 'dart:ui';
-
 import 'package:animated_notch_bottom_bar/animated_notch_bottom_bar/animated_notch_bottom_bar.dart';
-import 'package:blurrycontainer/blurrycontainer.dart';
+import 'package:bmusic/components/background.dart';
 import 'package:bmusic/pages/home/downloads.dart';
 import 'package:bmusic/pages/home/online.dart';
 import 'package:bmusic/pages/home/user.dart';
@@ -62,10 +60,7 @@ class __HomeState extends State<Home> with SingleTickerProviderStateMixin {
                 leading: Icon(Icons.home_outlined, color: theme.primary, size: 34,),
                 actions: [ IconButton(icon: const Icon(Icons.queue_music_outlined), onPressed: toMusics,) ],
                 leadingWidth: 30,),
-            body: BlurryContainer(
-                blur: 10,
-                color: Colors.black.withOpacity(0.3),
-                padding: const EdgeInsets.all(0),
+            body: Background(
                 child: PageView( controller: __pageController, physics: const NeverScrollableScrollPhysics(), children: pages)),
             bottomNavigationBar: AnimatedNotchBottomBar(color: Colors.white, showLabel: false,
               notchBottomBarController: __controller,

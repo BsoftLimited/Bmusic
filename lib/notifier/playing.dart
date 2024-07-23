@@ -1,20 +1,17 @@
-import 'dart:developer';
-import 'dart:io';
-
 import 'package:audioplayers/audioplayers.dart';
+import 'package:bmusic/notifier/settings.dart';
 import 'package:bmusic/utils/util.dart';
-import 'package:device_info_plus/device_info_plus.dart';
 import 'package:flutter/material.dart';
 import 'package:on_audio_query/on_audio_query.dart';
-import 'package:permission_handler/permission_handler.dart';
 
-enum PlayMode{ single, sequence, shuffle }
+enum RepeatMode{ single, all, off }
+enum ShuffleMode{ on, off }
 
 class PlayingStateNotifier extends ChangeNotifier {
-    final List<SongModel> __songs = [];
+    final SettingsNotifier __settingsNotifier;
     List<SongModel> __playList = [];
 
-    List<SongModel> get songs => __songs;
+    List<SongModel> get songs => __settingsNotifier.songs;
     List<SongModel> get playList => __playList;
 
     final player = AudioPlayer();
@@ -46,49 +43,56 @@ class PlayingStateNotifier extends ChangeNotifier {
 
     set current(SongModel? songModel){
         if(songModel != null){
-            __curentIndex = __playList.indexOf(songModel);
-            __initPlayMode();
+            __curentIndex = __settingsNotifier.songs.indexOf(songModel);
+            __initShuffleMode();
             __play();
         }
     }
 
-    PlayMode __playMode = PlayMode.sequence;
-    PlayMode get playMode => __playMode;
+    void setFromPlaylist(SongModel songModel){
+        __curentIndex = __playList.indexOf(songModel);
+        __play();
+    }
 
-    void __initPlayMode(){
-        switch(__playMode){
-            case PlayMode.sequence:
-                __curentIndex = __songs.indexOf(current!);
-                __playList = __songs;
+    RepeatMode __repeatMode = RepeatMode.all;
+    RepeatMode get repeatMode => __repeatMode;
+    void toggleRepeatMode(){
+        switch(__repeatMode){
+            case RepeatMode.single:
+                __repeatMode = RepeatMode.all;
+                break;
+            case RepeatMode.all:
+              __repeatMode = RepeatMode.off;
+              break;
+            case RepeatMode.off:
+              __repeatMode = RepeatMode.single;
+              break;
+        }
+        notifyListeners();
+    }
+
+    ShuffleMode __shuffleMode = ShuffleMode.off;
+    ShuffleMode get shuffleMode => __shuffleMode;
+    void __initShuffleMode(){
+        switch(__shuffleMode){
+            case ShuffleMode.off:
+                __curentIndex = __settingsNotifier.songs.indexOf(current!);
+                __playList = __settingsNotifier.songs;
                 notifyListeners();
                 break;
-            case PlayMode.shuffle:
-              Util.shuffle(__songs, current!).then((list){
+            case ShuffleMode.on:
+              Util.shuffle(__settingsNotifier.songs, current!).then((list){
                   __playList = list;
                   __curentIndex = 0;
                   notifyListeners();
               });
               break;
-            case PlayMode.single:
-              __playList = [current!];
-              __curentIndex = 0;
-              notifyListeners();
-              break;
         }
     }
-    void togglePlayMode(){
-        switch(__playMode){
-            case PlayMode.single:
-                __playMode = PlayMode.sequence;
-                break;
-            case PlayMode.sequence:
-              __playMode = PlayMode.shuffle;
-              break;
-            case PlayMode.shuffle:
-              __playMode = PlayMode.single;
-              break;
-        }
-        __initPlayMode();
+    void toggleShuffleMode(){
+        __shuffleMode = __shuffleMode == ShuffleMode.off ? ShuffleMode.on : ShuffleMode.off;
+        __initShuffleMode();
+        notifyListeners();
     }
 
     final Map<int, SongModel> __favourites = {};
@@ -110,76 +114,9 @@ class PlayingStateNotifier extends ChangeNotifier {
         }
     }
 
-    PlayingStateNotifier(){        
-        __fetchSongs().then((songs){
-            __songs.addAll(songs);
-            __playList = __songs;
-            init();
-        }).whenComplete((){
-            notifyListeners();
-            if(onLoadingfinished != null){
-                onLoadingfinished!();
-            }
-        });
-    }
-
-    Future<bool> storagePermission() async {
-        final DeviceInfoPlugin info = DeviceInfoPlugin(); // import 'package:device_info_plus/device_info_plus.dart';
-        final AndroidDeviceInfo androidInfo = await info.androidInfo;
-        
-        debugPrint('releaseVersion : ${androidInfo.version.release}');
-        final int androidVersion = int.parse(androidInfo.version.release);
-        bool havePermission = false;
-
-        if (androidVersion >= 13) {
-          final request = await [
-            Permission.audio,
-          ].request(); //import 'package:permission_handler/permission_handler.dart';
-
-          havePermission = request.values.every((status) => status == PermissionStatus.granted);
-        } else {
-          final status = await Permission.storage.request();
-          havePermission = status.isGranted;
-        }
-
-        if (!havePermission) {
-          // if no permission then open app-setting
-          havePermission = await openAppSettings();
-        }
-
-        return havePermission;
-    }
-
-    Future<Iterable<SongModel>> __fetchSongs() async{
-        bool permissionStatus = await storagePermission();
-        if(!permissionStatus){
-            exit(0);
-        }
-        
-        OnAudioQuery audioQuery = OnAudioQuery();
-    		permissionStatus = await audioQuery.permissionsStatus();
-        
-        if (!permissionStatus) {
-            if(! await audioQuery.permissionsRequest()){
-                await openAppSettings();
-            }
-        }
-		    
-        return await find(audioQuery);
-    }
-
-    Future<Iterable<SongModel>> find(OnAudioQuery audioQuery) async{
-        try{
-            List<SongModel> initList = await audioQuery.querySongs( 
-                sortType: SongSortType.TITLE, 
-                orderType: OrderType.ASC_OR_SMALLER, 
-                uriType: UriType.EXTERNAL, ignoreCase: true);
-
-            return initList;
-        }catch(error){
-            log('Error: $error');
-            throw Exception(error);
-        }
+    PlayingStateNotifier({ required SettingsNotifier settingsNotifier }): __settingsNotifier = settingsNotifier{
+        __playList = __settingsNotifier.songs;
+        init().whenComplete(()=> notifyListeners());
     }
 
     Future<void> init() async {
@@ -188,12 +125,15 @@ class PlayingStateNotifier extends ChangeNotifier {
                 case PlayerState.playing:
                   break;
                 case PlayerState.completed:
-                  next();
+                  if(repeatMode != RepeatMode.off){
+                      next();
+                  }
                   break;
                 case PlayerState.paused:
                   break;
                 case PlayerState.stopped:
                   break;
+ 
                 case PlayerState.disposed:
                   break;
             }
@@ -210,9 +150,9 @@ class PlayingStateNotifier extends ChangeNotifier {
             notifyListeners();
         });
 
-        if(__songs.isNotEmpty){
+        if(__settingsNotifier.songs.isNotEmpty){
             await player.setSource((DeviceFileSource((current as SongModel).data)));
-            __initPlayMode();
+            __initShuffleMode();
         }
     }
 
@@ -234,15 +174,23 @@ class PlayingStateNotifier extends ChangeNotifier {
     }
 
     void next(){
-        if(playMode != PlayMode.single && __curentIndex + 1 < __playList.length){
-            __curentIndex+= 1;
+        if(repeatMode != RepeatMode.single){
+            if(__curentIndex + 1 < __playList.length){
+                __curentIndex+= 1;
+            }else{
+                __curentIndex = 0;
+            }
         }
         __play();
     }
 
     void prev(){
-        if(playMode != PlayMode.single && __curentIndex - 1 > 0){
-            __curentIndex -= 1;
+        if(repeatMode != RepeatMode.single){
+              if( __curentIndex - 1 > 0){
+                  __curentIndex -= 1;
+              }else{
+                  __curentIndex = __playList.length - 1;
+              }
         }
         __play();
     }

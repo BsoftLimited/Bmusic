@@ -1,5 +1,4 @@
 import 'package:bmusic/notifier/playing.dart';
-import 'package:bmusic/notifier/settings.dart';
 import 'package:bmusic/notifier/user.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -44,15 +43,14 @@ class __NotifierWidgetState<T extends ChangeNotifier> extends State<NotifierWidg
 }
 
 class AppNotifierWidget extends StatefulWidget{
-    final Widget Function(BuildContext, PlayingStateNotifier, SettingsNotifier, UserNoitifier, Widget?) builder;
+    final Widget Function(BuildContext, PlayingStateNotifier, UserNoitifier, Widget?) builder;
     final PlayingStateNotifier playingStateNotifier;
-    final SettingsNotifier settingsNotifier;
     final UserNoitifier userNoitifier;
     final Widget? child;
-    final Function(PlayingStateNotifier, SettingsNotifier, UserNoitifier)? onNotifierReady;
+    final Function(PlayingStateNotifier, UserNoitifier)? onNotifierReady;
     final bool autoDispoise;
 
-    const AppNotifierWidget({ super.key, required this.playingStateNotifier, required this.settingsNotifier, required this.userNoitifier, required this.builder, this.child, this.onNotifierReady, this.autoDispoise = true });
+    const AppNotifierWidget({ super.key, required this.playingStateNotifier, required this.userNoitifier, required this.builder, this.child, this.onNotifierReady, this.autoDispoise = true });
     
     @override
     State<StatefulWidget> createState() => __AppNotifierWidgetState();
@@ -60,16 +58,14 @@ class AppNotifierWidget extends StatefulWidget{
 
 class __AppNotifierWidgetState extends State<AppNotifierWidget>{
     late PlayingStateNotifier playingStateNotifier;
-    late SettingsNotifier settingsNotifier;
     late UserNoitifier userNoitifier;
 
     @override
     void initState() {
         playingStateNotifier = widget.playingStateNotifier;
-        settingsNotifier = widget.settingsNotifier;
         userNoitifier = widget.userNoitifier;
         if(widget.onNotifierReady != null){
-            widget.onNotifierReady!(playingStateNotifier, settingsNotifier, userNoitifier);
+            widget.onNotifierReady!(playingStateNotifier,  userNoitifier);
         }
         super.initState();
     }
@@ -79,17 +75,15 @@ class __AppNotifierWidgetState extends State<AppNotifierWidget>{
         return MultiProvider(
             providers: [
                 ChangeNotifierProvider(create: (BuildContext context) => playingStateNotifier),
-                ChangeNotifierProvider(create: (BuildContext context) => settingsNotifier),
                 ChangeNotifierProvider(create: (BuildContext context) => userNoitifier),
             ],
-            child: Consumer3(builder: widget.builder, child: widget.child,));
+            child: Consumer2(builder: widget.builder, child: widget.child,));
     }
 
     @override
     void dispose() {
         if(widget.autoDispoise){
             playingStateNotifier.dispose();
-            settingsNotifier.dispose();
             userNoitifier.dispose();
         }
         super.dispose();

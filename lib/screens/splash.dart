@@ -1,15 +1,23 @@
-import 'dart:developer';
-
-import 'package:bmusic/notifier/playing.dart';
+import 'package:bmusic/notifier/settings.dart';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:provider/provider.dart';
 
-class Splash extends StatefulWidget{
-    final String message;
+class Launcher extends StatelessWidget{
+    const Launcher({super.key});
 
-    const Splash({super.key, this.message = "getting song list, Please wait"});
+    @override
+    Widget build(BuildContext context) {
+        return const MaterialApp(
+            debugShowCheckedModeBanner: false,
+            home: Splash(),       
+        );
+    }
+}
+
+class Splash extends StatefulWidget{
+    const Splash({super.key});
 
     @override
     State<StatefulWidget> createState() => __SplashState();
@@ -18,11 +26,7 @@ class Splash extends StatefulWidget{
 class __SplashState extends State<Splash>{
     @override
     Widget build(BuildContext context) {
-        PlayingStateNotifier playingNotifier = context.watch<PlayingStateNotifier>();
-        playingNotifier.onLoadingfinished = (){
-          log("i am done loading");
-          Navigator.pop(context);
-        };
+        SettingsNotifier settingsNotifier = context.watch<SettingsNotifier>();
         
         return Scaffold(
           body: Container(
@@ -39,7 +43,7 @@ class __SplashState extends State<Splash>{
                                   boxShadow: const [BoxShadow(blurRadius: 3)])); },
                   ),
                   const SizedBox(height: 20,),
-                  Text(widget.message, style: const TextStyle(color: Colors.black54, fontSize: 15.0, fontWeight: FontWeight.bold),)
+                  Text(settingsNotifier.message, style: const TextStyle(color: Colors.black54, fontSize: 15.0, fontWeight: FontWeight.bold),)
               ],
             ),
           ),

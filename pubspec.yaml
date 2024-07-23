@@ -57,6 +57,8 @@ dependencies:
   device_info_plus: ^10.1.0
   dio: ^5.5.0+1
   oktoast: ^3.4.0
+  bubble_navigation_bar: ^0.0.2
+  wallpaper_handler: ^0.0.2
 
 dev_dependencies:
   flutter_test:
