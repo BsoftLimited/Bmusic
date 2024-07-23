@@ -1,3 +1,4 @@
+import 'package:bmusic/pages/music/common.dart';
 import 'package:flutter/material.dart';
 
 class Playlists extends StatelessWidget{
@@ -5,12 +6,10 @@ class Playlists extends StatelessWidget{
 
     @override
     Widget build(BuildContext context) {
-        return Stack(
-            children: [
-                DecoratedBox(position: DecorationPosition.foreground,
-                    decoration: BoxDecoration(color: Colors.black.withOpacity(0)),
-                    child: ClipRRect(child: Image.asset("files/music_record.jpeg", fit: BoxFit.fitWidth,)),)
-            ]
+        return CustomScrollView(
+            slivers: [
+                showSliverAppBar(context: context, screenTitle: "Playlist"),
+            ],
         );
     }
 }

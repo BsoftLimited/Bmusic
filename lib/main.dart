@@ -14,14 +14,9 @@ import 'package:provider/provider.dart';
 
 void main() => runApp(const App());
 
-class App extends StatefulWidget{
+class App extends StatelessWidget{
     const App({super.key});
 
-    @override
-    State<StatefulWidget> createState() => __AppState();
-}
-
-class __AppState extends State<App>{
     @override
     Widget build(BuildContext context) {
         return NotifierWidget<SettingsNotifier>(notifier: SettingsNotifier(),
@@ -35,15 +30,10 @@ class __AppState extends State<App>{
     }
 }
 
-class BMusic extends StatefulWidget {
+class BMusic extends StatelessWidget {
     const BMusic({super.key});
 
     @override
-    State<StatefulWidget> createState() => __BMusicState();   
-}
-
-class __BMusicState extends State<BMusic>{
-     @override
     Widget build(BuildContext context) {
         SettingsNotifier settingsNotifier = context.watch<SettingsNotifier>();
 
@@ -51,7 +41,6 @@ class __BMusicState extends State<BMusic>{
             builder: (context, playingNotifier, userNotifier, child){
                 TextTheme textTheme = createTextTheme(context, "Noto Sans Mono", "Acme");
                 MaterialTheme theme = MaterialTheme(textTheme);
-                SettingsNotifier settingsNotifier = Provider.of<SettingsNotifier>(context, listen: true);
                 
                 return MaterialApp(
                     debugShowCheckedModeBanner: false,
@@ -67,4 +56,3 @@ class __BMusicState extends State<BMusic>{
             });
     }
 }
-   
