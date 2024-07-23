@@ -1,6 +1,5 @@
 import 'dart:ui';
 
-import 'package:bmusic/notifier/playing.dart';
 import 'package:bmusic/notifier/settings.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
