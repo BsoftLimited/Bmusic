@@ -48,16 +48,16 @@ Future<Iterable<SongModel>> __find(OnAudioQuery audioQuery) async{
     }
 }
 
-Future<Image> __getBackgroundImage() async{
+Future<DecorationImage> __getBackgroundImage() async{
     try{ 
         Uint8List? imgBytes =  await WallpaperHandler.instance.getWallpaper(WallpaperLocation.homeScreen);
         if(imgBytes != null){
-            return Image.memory(Uint8List.fromList(imgBytes.toList()), fit: BoxFit.fitHeight,);
+            return DecorationImage(image: MemoryImage(imgBytes), fit: BoxFit.fitHeight);
         }
     }catch(error){
         return Future.error(error);
     }
-    return Future.error(Exception("unable to retrieve wallpater"));
+    return Future.error(Exception("unable to retrieve wallpaper"));
 }
 
 Future<Iterable<SongModel>> __fetchSongs() async{
@@ -78,14 +78,15 @@ Future<Iterable<SongModel>> __fetchSongs() async{
 
 class Settings {
     String themeMode;
+    int? lastSong;
 
-    Settings({ this.themeMode = "auto" });
+    Settings({ this.themeMode = "auto", this.lastSong });
 
     factory Settings.fromJson(dynamic json) {
-        return Settings( themeMode: json["themeMode"] as String);
+        return Settings(themeMode: json["themeMode"].toString(), lastSong: json["lastSong"]);
     }
 
-    Map toJson() => { "themeMode" : themeMode };
+    Map toJson() => { "themeMode" : themeMode, "lastSong": lastSong };
 
     String serialize() => jsonEncode(toJson());
 }
@@ -106,8 +107,8 @@ Future<Settings> __findSettings() async{
 class SettingsNotifier extends ChangeNotifier{
     late Settings __settings;
 
-    late Image __background;
-    Image get background => __background;
+    late DecorationImage __background;
+    DecorationImage get background => __background;
 
     final List<SongModel> __songs = [];
     List<SongModel> get songs => __songs;

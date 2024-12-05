@@ -1,11 +1,19 @@
+import 'dart:convert';
+import 'dart:developer';
+
 import 'package:audioplayers/audioplayers.dart';
 import 'package:bmusic/notifier/settings.dart';
+import 'package:bmusic/utils/objectio.dart';
 import 'package:bmusic/utils/util.dart';
 import 'package:flutter/material.dart';
 import 'package:on_audio_query/on_audio_query.dart';
 
 enum RepeatMode{ single, all, off }
 enum ShuffleMode{ on, off }
+
+class PlayingState{
+
+}
 
 class PlayingStateNotifier extends ChangeNotifier {
     final SettingsNotifier __settingsNotifier;
@@ -16,7 +24,7 @@ class PlayingStateNotifier extends ChangeNotifier {
 
     final player = AudioPlayer();
 
-    Function? onLoadingfinished;
+    Function? onLoadingFinished;
 
     
     bool get playing => player.state == PlayerState.playing ;
@@ -133,7 +141,6 @@ class PlayingStateNotifier extends ChangeNotifier {
                   break;
                 case PlayerState.stopped:
                   break;
- 
                 case PlayerState.disposed:
                   break;
             }
@@ -193,6 +200,15 @@ class PlayingStateNotifier extends ChangeNotifier {
               }
         }
         __play();
+    }
+
+    Future<void> saveFavourites() async{
+        try{
+            ObjectIO objectIO = ObjectIO(folder: "data");
+            objectIO.writeToFile("favourites", jsonEncode(__favourites.keys));
+        }catch(error){
+            log("Favourites save error:", error: error);
+        }
     }
 
     @override

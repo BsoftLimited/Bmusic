@@ -173,4 +173,30 @@ class _MyHomePageState extends State<MyHomePage> {
       ),
     );
   }
-}*/
+}
+
+RichText(
+      text: TextSpan(
+        style: defaultStyle,
+        children: <TextSpan>[
+          TextSpan(text: 'By clicking Sign Up, you agree to our '),
+          TextSpan(
+              text: 'Terms of Service',
+              style: linkStyle,
+              recognizer: TapGestureRecognizer()
+                ..onTap = () {
+                  print('Terms of Service"');
+                }),
+          TextSpan(text: ' and that you have read our '),
+          TextSpan(
+              text: 'Privacy Policy',
+              style: linkStyle,
+              recognizer: TapGestureRecognizer()
+                ..onTap = () {
+                  print('Privacy Policy"');
+                }),
+        ],
+      ),
+    )
+
+*/

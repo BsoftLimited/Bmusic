@@ -3,7 +3,8 @@ import 'package:bmusic/notifier/settings.dart';
 import 'package:bmusic/notifier/user.dart';
 import 'package:bmusic/notifier/widget.dart';
 import 'package:bmusic/screens/home.dart';
-import 'package:bmusic/screens/music.dart';
+import 'package:bmusic/pages/music.dart';
+import 'package:bmusic/screens/playlist.dart';
 import 'package:bmusic/screens/search.dart';
 import 'package:bmusic/screens/splash.dart';
 import 'package:bmusic/utils/theme.dart';
@@ -49,9 +50,9 @@ class BMusic extends StatelessWidget {
                     themeMode: settingsNotifier.themeModeValue,
                     initialRoute: "/",
                     routes: {
-                        "/music": (_) =>  const Music(),
                         "/": (_) => const Home(),
-                        "/search": (_) => const Search(),       
+                        "/search": (_) => const Search(), 
+                        "/playlist": (_) => const Playlist()      
                 });   
             });
     }

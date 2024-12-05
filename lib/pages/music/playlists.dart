@@ -1,4 +1,3 @@
-import 'package:bmusic/pages/music/common.dart';
 import 'package:flutter/material.dart';
 
 class Playlists extends StatelessWidget{
@@ -6,10 +5,6 @@ class Playlists extends StatelessWidget{
 
     @override
     Widget build(BuildContext context) {
-        return CustomScrollView(
-            slivers: [
-                showSliverAppBar(context: context, screenTitle: "Playlist"),
-            ],
-        );
+        return const Text("this is stupid");
     }
 }

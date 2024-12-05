@@ -13,11 +13,7 @@ class Background extends StatelessWidget{
   Widget build(BuildContext context) {
       SettingsNotifier settingsNotifier = context.watch<SettingsNotifier>();
 
-      DecorationImage? initBackground(){
-          return DecorationImage(image: settingsNotifier.background.image, fit: BoxFit.fitHeight);
-      }
-
-      return DecoratedBox(decoration: BoxDecoration(image: initBackground()),
+      return DecoratedBox(decoration: BoxDecoration(image: settingsNotifier.background),
           child: Stack(fit: StackFit.expand,
             children: [
                 Container(decoration: BoxDecoration(color: Colors.black.withOpacity(0.3))),

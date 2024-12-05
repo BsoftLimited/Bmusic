@@ -1,10 +1,9 @@
-import 'package:animated_notch_bottom_bar/animated_notch_bottom_bar/animated_notch_bottom_bar.dart';
 import 'package:bmusic/components/background.dart';
-import 'package:bmusic/pages/home/downloads.dart';
 import 'package:bmusic/pages/home/online.dart';
-import 'package:bmusic/pages/home/user.dart';
-import 'package:bmusic/pages/home/settings.dart';
 import 'package:bmusic/notifier/google.dart';
+import 'package:bmusic/pages/home/settings.dart';
+import 'package:bmusic/pages/music.dart';
+import 'package:bubble_navigation_bar/bubble_navigation_bar.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
@@ -15,59 +14,44 @@ class Home extends StatefulWidget {
   State<StatefulWidget> createState() => __HomeState();
 }
 
-class __HomeState extends State<Home> with SingleTickerProviderStateMixin {
-  final __pageController = PageController(initialPage: 0);
-  final __controller = NotchBottomBarController(index: 0);
 
-  @override
-  void dispose() {
-    __pageController.dispose();
-    super.dispose();
-  }
+class __HomeState extends State<Home> {
+    final __pageController = PageController();
+    int __index = 0;
+    
+    @override
+    void initState() {
+        super.initState();
+        __pageController.addListener(() {
+            setState(() {
+                __index = __pageController.page!.round();
+            });
+        });
+    }
 
-  BottomBarItem barItem(BuildContext context, IconData icon){
-      final ColorScheme theme = Theme.of(context).colorScheme;
+    @override
+    Widget build(BuildContext context) {
+        final ColorScheme theme = Theme.of(context).colorScheme;
 
-      return BottomBarItem(
-          inActiveItem: Icon(icon, color: theme.onSurfaceVariant),
-          activeItem: Icon(icon, color: theme.primary),
-          itemLabel: '',
-      );
-  }
-
-  List<BottomBarItem> initBarItems(BuildContext context) =>[
-      barItem(context, Icons.person_2_outlined),
-      barItem(context, Icons.cloud_outlined),
-      barItem(context, Icons.cloud_download_outlined),
-      barItem(context, Icons.settings_outlined),
-  ];
-
-  void toMusics() =>Navigator.pushNamed(context, "/music");
-
-  List<Widget> pages = const [ User(), Online(), Downloads(), Settings() ];
-
-  @override
-  Widget build(BuildContext context) {
-      final ColorScheme theme = Theme.of(context).colorScheme;
-      
-      return MultiProvider(
-        providers: [
-          ChangeNotifierProvider(create: (context) => GoogleNotifier())
-        ],
-        child: Scaffold( extendBody: true, backgroundColor: Colors.transparent,
-            appBar: AppBar(backgroundColor: theme.surface, elevation: 0,
-                title: Text('Home', style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold, color: theme.primary),),
-                leading: Icon(Icons.home_outlined, color: theme.primary, size: 34,),
-                actions: [ IconButton(icon: const Icon(Icons.queue_music_outlined), onPressed: toMusics,) ],
-                leadingWidth: 30,),
-            body: Background(
-                child: PageView( controller: __pageController, physics: const NeverScrollableScrollPhysics(), children: pages)),
-            bottomNavigationBar: AnimatedNotchBottomBar(color: Colors.white, showLabel: false,
-              notchBottomBarController: __controller,
-              onTap: (index) => __pageController.jumpToPage(index),
-              bottomBarItems: initBarItems(context), kIconSize: 22, kBottomRadius: 20,
+        return Scaffold(
+            body: MultiProvider(
+                providers: [
+                  ChangeNotifierProvider(create: (context) => GoogleNotifier())
+                ],
+                child: Background(child: PageView(controller: __pageController, children: const [ Music(), Online(), Settings()]))),
+            bottomNavigationBar: BubbleNavigationBar(currentIndex: __index,
+                iconSize: 26,
+                backgroundColor: theme.surface, selectedItemColor: theme.primary,
+                unselectedItemColor: theme.onSurface,
+                onIndexChanged: (index) {
+                    __pageController.animateToPage(index, duration: const Duration(milliseconds: 300), curve: Curves.easeIn);
+                },
+                items: const [
+                    BubbleNavItem(icon: Icon(Icons.speaker), label: 'Player'),
+                    BubbleNavItem(icon: Icon(Icons.cloud), label: 'GDrive',),
+                    BubbleNavItem(icon: Icon(Icons.settings), label: 'Settings'),
+                ]
             ),
-        ),
-      );
-  }
+        );
+    }
 }
