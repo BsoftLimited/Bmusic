@@ -8,10 +8,12 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 class Home extends StatefulWidget {
-  const Home({super.key});
+    static const String routeName = "/";
 
-  @override
-  State<StatefulWidget> createState() => __HomeState();
+    const Home({super.key});
+
+    @override
+    State<StatefulWidget> createState() => __HomeState();
 }
 
 

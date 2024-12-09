@@ -42,7 +42,7 @@ dependencies:
   shared_preferences: ^2.2.1
   permission_handler: ^11.0.0
   sliding_up_panel: ^2.0.0+1
-  equatable: ^2.0.5
+  equatable: ^2.0.7
   mini_music_visualizer: ^1.0.2
   on_audio_query: ^2.9.0
   liquid_pull_to_refresh: ^3.0.1
@@ -58,6 +58,8 @@ dependencies:
   oktoast: ^3.4.0
   bubble_navigation_bar: ^0.0.2
   wallpaper_handler: ^0.0.2
+  flutter_bloc: ^8.1.6
+  hydrated_bloc: ^9.1.5
 
 dev_dependencies:
   flutter_test:
@@ -69,6 +71,7 @@ dev_dependencies:
   # package. See that file for information about deactivating specific lint
   # rules and activating additional ones.
   flutter_lints: ^4.0.0
+  mocktail: ^1.0.4
 
 # For information on the generic Dart part of this file, see the
 # following page: https://dart.dev/tools/pub/pubspec

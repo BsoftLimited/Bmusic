@@ -1,6 +1,4 @@
-import 'package:bmusic/notifier/settings.dart';
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
 
 class Settings extends StatefulWidget{
     const Settings({super.key});
@@ -10,13 +8,12 @@ class Settings extends StatefulWidget{
 }
 
 class __SettingsState extends State<Settings>{
-    late SettingsNotifier __settingsNotifier;
+    
 
     @override
     Widget build(BuildContext context) {
         final ColorScheme theme = Theme.of(context).colorScheme;
 
-        __settingsNotifier = Provider.of<SettingsNotifier>(context, listen: true);
 
         return CustomScrollView(slivers: [
           

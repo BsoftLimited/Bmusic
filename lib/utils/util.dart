@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'dart:io';
 import 'dart:math';
+import 'package:equatable/equatable.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:on_audio_query/on_audio_query.dart';
@@ -61,22 +62,12 @@ class Util{
     }
 } 
 
-class Category{
-    final SongModel __songModel;
-    SongModel get songModel => __songModel;
+class Category extends Equatable{
+    final SongModel songModel;
+    final int index;
 
-    final int __index;
-    int get index => __index;
-
-    Category({ required int index, required SongModel songModel }): __index = index, __songModel = songModel;
-}
-
-class Option<T>{
-    T? __value;
-
-    Option.some(T? value): __value = value;
-    Option.none();
-
-    bool get isSome => __value != null;
-    T get value => __value!;
+    const Category({ required this.index, required this.songModel });
+    
+    @override
+    List<Object?> get props => [ songModel, index ];
 }

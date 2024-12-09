@@ -1,38 +1,23 @@
+import 'package:bmusic/blocs/playing_bloc.dart';
+import 'package:bmusic/blocs/states/playing_state.dart';
 import 'package:bmusic/components/album_view.dart';
-import 'package:bmusic/components/loading.dart';
-import 'package:bmusic/notifier/albums.dart';
-import 'package:bmusic/notifier/playing.dart';
-import 'package:bmusic/notifier/widget.dart';
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 
-class Albums extends StatefulWidget{
+class Albums extends StatelessWidget{
 
   const Albums({super.key});
 
-  @override
-  State<Albums> createState() => _AlbumsState();
-}
-
-class _AlbumsState extends State<Albums> {
-  late PlayingStateNotifier playingStateNotifier;
-
-  @override
-  Widget build(BuildContext context) {
-      playingStateNotifier = context.watch<PlayingStateNotifier>();
-
-      return NotifierWidget<AlbumsNotifier>(
-          notifier: AlbumsNotifier(songNotifier: playingStateNotifier),
-          builder: (buildContext, albumsNotifier, widget){
-              if(albumsNotifier.loading){
-                  return const Loading(message: "sorting songs according to Albums",);
-              }else{
-                  return ListView.separated(itemCount: albumsNotifier.albumsTitles.length, padding: const EdgeInsets.only(bottom: 140),
-                      itemBuilder: (BuildContext context, int index) => AlbumView(index:index),
-                      separatorBuilder: (BuildContext context, int index) => const Divider()
-                  );
-          }});
-      }
+    @override
+    Widget build(BuildContext context) {
+        return BlocBuilder<PlayingBloc, PlayingState>(
+            builder: (buildContext, state){  
+                return ListView.separated(itemCount: state.albumsTitles.length, padding: const EdgeInsets.only(bottom: 140),
+                    itemBuilder: (BuildContext context, int index) => AlbumView(index:index),
+                    separatorBuilder: (BuildContext context, int index) => const Divider()
+                );
+            });
+    }
 }
 
 /*
